@@ -1,0 +1,35 @@
+
+<div class="form-container">
+  <div class="tender-summary">
+    <h3><%= tender.title %></h3>
+    <p><strong>Budget:</strong> <%= formatCurrency(tender.budget) %></p>
+    <p><strong>Deadline:</strong> <%= formatDate(tender.deadline) %></p>
+  </div>
+  
+  <form action="/tenders/<%= tender.id %>/offers/add" method="post">
+    <div class="form-group">
+      <label for="company_name">Company Name:</label>
+      <input type="text" id="company_name" name="company_name" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="contact_email">Contact Email:</label>
+      <input type="email" id="contact_email" name="contact_email" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="price">Price (USD):</label>
+      <input type="number" id="price" name="price" step="0.01" min="0" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="proposal">Proposal:</label>
+      <textarea id="proposal" name="proposal" rows="6" required></textarea>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit Offer</button>
+      <a href="/tenders/<%= tender.id %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

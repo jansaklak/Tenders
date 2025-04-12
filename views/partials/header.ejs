@@ -1,0 +1,24 @@
+<!-- views/partials/header.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Tender Management System</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>Tender Management System</h1>
+    <nav>
+      <ul>
+        <li><a href="/tenders/active">Active Tenders</a></li>
+        <li><a href="/tenders/ended">Ended Tenders</a></li>
+        <li><a href="/tenders/add">Add New Tender</a></li>
+        <li><a href="/tenders">All Tenders</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <h2><%= title %></h2>

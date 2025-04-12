@@ -1,0 +1,31 @@
+
+<div class="tenders-list">
+  <% if (tenders.length === 0) { %>
+    <p>No ended tenders found.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Budget</th>
+          <th>Deadline</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% tenders.forEach(tender => { %>
+          <tr>
+            <td><a href="/tenders/<%= tender.id %>"><%= tender.title %></a></td>
+            <td><%= formatCurrency(tender.budget) %></td>
+            <td><%= formatDate(tender.deadline) %></td>
+            <td><%= formatDate(tender.created_at) %></td>
+            <td>
+              <a href="/tenders/<%= tender.id %>" class="btn">View Details</a>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>

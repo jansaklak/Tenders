@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - Tender Management System</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>Tender Management System</h1>
+    <nav>
+      <ul>
+        <li><a href="/tenders/active">Active Tenders</a></li>
+        <li><a href="/tenders/ended">Ended Tenders</a></li>
+        <li><a href="/tenders/add">Add New Tender</a></li>
+        <li><a href="/tenders">All Tenders</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <h2><%= title %></h2>
+
+    <!-- Tender List -->
+    <div class="tenders-list">
+      <% if (tenders.length === 0) { %>
+        <p>No tenders found.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Budget</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tenders.forEach(tender => { %>
+              <tr>
+                <td><a href="/tenders/<%= tender.id %>"><%= tender.title %></a></td>
+                <td><%= formatCurrency(tender.budget) %></td>
+                <td><%= formatDate(tender.deadline) %></td>
+                <td><%= tender.status %></td>
+                <td>
+                  <a href="/tenders/<%= tender.id %>" class="btn">View Details</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+
+    <!-- Add Tender Form -->
+    <div class="form-container">
+      <form action="/tenders/add" method="post">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="budget">Budget (USD):</label>
+          <input type="number" id="budget" name="budget" step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="deadline">Deadline:</label>
+          <input type="date" id="deadline" name="deadline" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Create Tender</button>
+          <a href="/tenders" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tender Details -->
+    <div class="tender-details">
+      <div class="tender-info">
+        <h3><%= tender.title %></h3>
+        <p><strong>Description:</strong> <%= tender.description %></p>
+        <p><strong>Budget:</strong> <%= formatCurrency(tender.budget) %></p>
+        <p><strong>Deadline:</strong> <%= formatDate(tender.deadline) %></p>
+        <p><strong>Status:</strong> <%= tender.status %></p>
+        <p><strong>Created:</strong> <%= formatDate(tender.created_at) %></p>
+
+        <div class="actions">
+          <% if (tender.status === 'active') { %>
+            <form action="/tenders/<%= tender.id %>/end" method="post" class="inline">
+              <button type="submit" class="btn btn-warning">End Tender</button>
+            </form>
+          <% } %>
+          
+          <form action="/tenders/<%= tender.id %>/delete" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this tender?');">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Offers Section -->
+      <div class="offers-section">
+        <h3>Offers (<%= offers.length %>)</h3>
+        
+        <% if (tender.status === 'active') { %>
+          <a href="/tenders/<%= tender.id %>/offers/add" class="btn btn-primary">Submit New Offer</a>
+        <% } %>
+        
+        <% if (offers.length === 0) { %>
+          <p>No offers have been submitted yet.</p>
+        <% } else { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Price</th>
+                <th>Submitted</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% offers.forEach(offer => { %>
+                <tr>
+                  <td><%= offer.company_name %></td>
+                  <td><%= formatCurrency(offer.price) %></td>
+                  <td><%= formatDate(offer.submitted_at) %></td>
+                  <td>
+                    <button class="btn" onclick="toggleProposal('<%= offer.id %>')">View Proposal</button>
+                    <form action="/tenders/<%= tender.id %>/offers/<%= offer.id %>/delete" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this offer?');">
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <tr id="proposal-<%= offer.id %>" class="proposal-row hidden">
+                  <td colspan="4">
+                    <div class="proposal-content">
+                      <h4>Proposal from <%= offer.company_name %></h4>
+                      <p><strong>Contact:</strong> <%= offer.contact_email %></p>
+                      <div class="proposal-text">
+                        <%= offer.proposal %>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Tender Management System</p>
+  </footer>
+
+  <script>
+    function toggleProposal(offerId) {
+      const row = document.getElementById('proposal-' + offerId);
+      row.classList.toggle('hidden');
+    }
+  </script>
+
+</body>
+</html>
