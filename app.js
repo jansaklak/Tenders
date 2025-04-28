@@ -2,22 +2,22 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-
-// Create Express app
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Set up view engine
+// Importuj routes przed ich użyciem
+const tendersRoutes = require('./routes/tenders');
+
+// Ustawienia aplikacji
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Format date for display in views
+// Funkcje pomocnicze dostępne globalnie w szablonach
 app.locals.formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
@@ -27,7 +27,6 @@ app.locals.formatDate = (dateString) => {
   });
 };
 
-// Format currency for display in views
 app.locals.formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -35,17 +34,14 @@ app.locals.formatCurrency = (amount) => {
   }).format(amount);
 };
 
-// Routes
-const tendersRoutes = require('./routes/tenders');
-
+// Trasy
 app.use('/tenders', tendersRoutes);
 
-// Home route
 app.get('/', (req, res) => {
-  res.redirect('/tenders/index');
+  res.render('index'); // Załaduj jakiś widok np. "index.ejs"
 });
 
-// 404 handler
+// Obsługa błędu 404
 app.use((req, res, next) => {
   res.status(404).render('error', {
     message: 'Page not found',
@@ -53,7 +49,7 @@ app.use((req, res, next) => {
   });
 });
 
-// Error handler
+// Obsługa innych błędów
 app.use((err, req, res, next) => {
   res.status(err.status || 500).render('error', {
     message: err.message,
@@ -61,7 +57,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
+// Start serwera
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

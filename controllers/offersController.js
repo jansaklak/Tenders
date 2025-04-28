@@ -1,7 +1,6 @@
 const Offer = require('../models/offerModel');
 const Tender = require('../models/tenderModel');
 
-// Get all offers for a tender
 exports.getAllOffers = (req, res) => {
   const tenderId = req.params.tenderId;
   
@@ -39,7 +38,6 @@ exports.getAllOffers = (req, res) => {
   });
 };
 
-// Display add offer form
 exports.showAddOfferForm = (req, res) => {
   const tenderId = req.params.tenderId;
   
@@ -73,7 +71,6 @@ exports.showAddOfferForm = (req, res) => {
   });
 };
 
-// Create a new offer
 exports.createOffer = (req, res) => {
   const tenderId = req.params.tenderId;
   
@@ -98,7 +95,6 @@ exports.createOffer = (req, res) => {
   });
 };
 
-// Delete an offer
 exports.deleteOffer = (req, res) => {
   const offerId = req.params.id;
   const tenderId = req.params.tenderId;

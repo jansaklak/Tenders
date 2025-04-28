@@ -1,7 +1,6 @@
 const Tender = require('../models/tenderModel');
 const Offer = require('../models/offerModel');
 
-// Get all tenders
 exports.getAllTenders = (req, res) => {
   Tender.getAll((err, tenders) => {
     if (err) {
@@ -19,7 +18,6 @@ exports.getAllTenders = (req, res) => {
   });
 };
 
-// Get active tenders
 exports.getActiveTenders = (req, res) => {
   Tender.getActive((err, tenders) => {
     if (err) {
@@ -37,7 +35,6 @@ exports.getActiveTenders = (req, res) => {
   });
 };
 
-// Get ended tenders
 exports.getEndedTenders = (req, res) => {
   const query = `SELECT * FROM tenders WHERE status = 'ended' ORDER BY created_at DESC`;
   
@@ -59,7 +56,6 @@ exports.getEndedTenders = (req, res) => {
   });
 };
 
-// Display tender details
 exports.getTenderDetails = (req, res) => {
   const tenderId = req.params.id;
   
@@ -97,14 +93,12 @@ exports.getTenderDetails = (req, res) => {
   });
 };
 
-// Display add tender form
 exports.showAddTenderForm = (req, res) => {
   res.render('addTender', { 
     title: 'Add New Tender' 
   });
 };
 
-// Create a new tender
 exports.createTender = (req, res) => {
   const tenderData = {
     title: req.body.title,
@@ -127,7 +121,6 @@ exports.createTender = (req, res) => {
   });
 };
 
-// End a tender
 exports.endTender = (req, res) => {
   const tenderId = req.params.id;
   
@@ -144,7 +137,6 @@ exports.endTender = (req, res) => {
   });
 };
 
-// Delete a tender
 exports.deleteTender = (req, res) => {
   const tenderId = req.params.id;
   
